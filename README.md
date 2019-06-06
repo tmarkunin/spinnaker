@@ -3,7 +3,7 @@
 
 #Enable required APIs for your project
 
-gcloud auth login
+gcloud auth application-default login
 gcloud config set project PROJECT_ID
 
 gcloud services enable cloudbuild.googleapis.com
@@ -26,6 +26,8 @@ gcloud projects add-iam-policy-binding \
 
 gcloud iam service-accounts keys create spinnaker-sa.json --iam-account $SA_EMAIL
 
+export SA_JSON=$(cat spinnaker-sa.json)
+
 
 
 
@@ -35,9 +37,6 @@ gcloud config set compute/zone us-central1-f
 sudo gcloud container clusters create spinnaker-tutorial \
     --machine-type=n1-standard-2
 
-
-export SA_JSON=$(cat spinnaker-sa.json)
-export PROJECT=$(gcloud info --format='value(config.project)'
 
 sudo gcloud container clusters get-credentials spinnaker-tutorial --zone us-central1-f --project $PROJECT
 
@@ -50,9 +49,11 @@ tar zxfv helm-v2.10.0-linux-amd64.tar.gz
 
 cp linux-amd64/helm .
 
-kubectl create clusterrolebinding user-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
-kubectl create serviceaccount tiller --namespace kube-system
-kubectl create clusterrolebinding tiller-admin-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
+chmod +x helm
+
+sudo kubectl create clusterrolebinding user-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
+sudo kubectl create serviceaccount tiller --namespace kube-system
+sudo kubectl create clusterrolebinding tiller-admin-binding --clusterrole=cluster-admin --serviceaccount=kube-system:tiller
 
 #or
 kubectl apply -f helm-rbac.yaml
@@ -60,11 +61,11 @@ kubectl apply -f helm-rbac.yaml
 
 # We'll need helm connected to our Kubernetes cluster
 
-kubectl create clusterrolebinding --clusterrole=cluster-admin --serviceaccount=default:default spinnaker-admin
+sudo kubectl create clusterrolebinding --clusterrole=cluster-admin --serviceaccount=default:default spinnaker-admin
 
-helm init --service-account=tiller
+sudo ./helm init --service-account=tiller
 
-helm update
+sudo ./helm update
 
 
 #Then we'll want to install prometheus in order to collect metrics for our Canary efforts. GKE default storage class #is 'standard'
@@ -72,13 +73,13 @@ helm install --name prometheus --set server.persistentVolume.storageClass=standa
 
 #Connect to Prometheus
 #Get the Prometheus server URL by running these commands in the same shell:
-#  export POD_NAME=$(kubectl get pods --namespace default -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
+  export POD_NAME=$(kubectl get pods --namespace default -l "app=prometheus,component=server" -o jsonpath="{.items[0].metadata.name}")
   kubectl --namespace default port-forward $POD_NAME 9090
 
   helm status prometheus
 
   #Create the file (spinnaker-config.yaml) describing the configuration for how Spinnaker should be installed
 
-)
+
 
 
