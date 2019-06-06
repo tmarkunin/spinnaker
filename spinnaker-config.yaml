@@ -11,6 +11,28 @@ dockerRegistries:
     - rstarmer/hostname
     - rstarmer/curl
     - tmarkunin/testapi
+    
+spinnakerFeatureFlags:
+  - artifacts
+  - jobs
+  - pipeline-templates
+
+nodeSelector: {}
+
+redis:
+  password: password
+  nodeSelector: {}
+  cluster:
+    enabled: false
+
+minio:
+  enabled: true
+  imageTag: RELEASE.2018-06-09T02-18-09Z
+  serviceType: ClusterIP
+  accessKey: spinnakeradmin
+  secretKey: spinnakeradmin
+  bucket: "spinnaker"
+  nodeSelector: {}
 
 
 # Configure Spinnaker to enable GCP services
