@@ -1,0 +1,26 @@
+
+dockerRegistries:
+- name: gcr
+  address: https://gcr.io
+  username: _json_key
+  password: ''
+  email: 1234@5678.com
+- name: dockerhub
+  address: index.docker.io
+  repositories:
+    - rstarmer/hostname
+    - rstarmer/curl
+    - tmarkunin/testapi
+
+
+# Configure Spinnaker to enable GCP services
+halyard:
+  spinnakerVersion: 1.10.2
+  image:
+    tag: 1.12.0
+  additionalScripts:
+    create: true
+    data:
+      enable_pubsub_triggers.sh: |-
+        $HAL_COMMAND config pubsub google enable
+        $HAL_COMMAND config pubsub google subscription add gcr-triggers           --subscription-name gcr-triggers           --json-path /opt/gcs/key.json           --project docker-242218           --message-format GCR
