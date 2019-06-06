@@ -1,17 +1,28 @@
-
 dockerRegistries:
-- name: gcr
-  address: https://gcr.io
-  username: _json_key
-  password: ''
-  email: 1234@5678.com
 - name: dockerhub
   address: index.docker.io
   repositories:
     - rstarmer/hostname
     - rstarmer/curl
-    - tmarkunin/testapi
-    
+
+halyard:
+  spinnakerVersion: 1.12.0
+  image:
+    repository: gcr.io/spinnaker-marketplace/halyard
+    tag: 1.15.0
+  additionalScripts:
+    enabled: false
+    configMapName: my-halyard-config
+    configMapKey: config.sh
+    create: false
+    data: {}
+  additionalSecrets:
+    create: false
+    data: {}
+  additionalConfigMaps:
+    create: false
+    data: {}
+
 spinnakerFeatureFlags:
   - artifacts
   - jobs
@@ -33,16 +44,30 @@ minio:
   secretKey: spinnakeradmin
   bucket: "spinnaker"
   nodeSelector: {}
+gcs:
+  enabled: false
+  project: my-project-name
+  bucket: "<GCS-BUCKET-NAME>"
+  jsonKey: '<INSERT CLOUD STORAGE JSON HERE>'
 
+s3:
+  enabled: false
+  bucket: "<S3-BUCKET-NAME>"
+  # rootFolder: "front50"
+  # region: "us-east-1"
+  # endpoint: ""
+  # accessKey: ""
+  # secretKey: ""
 
-# Configure Spinnaker to enable GCP services
-halyard:
-  spinnakerVersion: 1.10.2
-  image:
-    tag: 1.12.0
-  additionalScripts:
-    create: true
-    data:
-      enable_pubsub_triggers.sh: |-
-        $HAL_COMMAND config pubsub google enable
-        $HAL_COMMAND config pubsub google subscription add gcr-triggers           --subscription-name gcr-triggers           --json-path /opt/gcs/key.json           --project docker-242218           --message-format GCR
+azs:
+  enabled: false
+#   storageAccountName: ""
+#   accessKey: ""
+#   containerName: "spinnaker"
+
+rbac:
+  create: true
+
+serviceAccount:
+  halyardName:
+  spinnakerName:
