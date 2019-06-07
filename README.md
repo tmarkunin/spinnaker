@@ -39,6 +39,16 @@ sudo gcloud container clusters create spinnaker-tutorial \
 sudo gcloud container clusters get-credentials spinnaker-tutorial --zone us-central1-f --project $PROJECT
 
 
+#So, Its time to deploy kubeconfig as Secret? Wait a minute. Somehow Spinnaker doesn’t accept underscores for cluster names to be used his inside, but gcloud container clusters get-credentials <cluster name> gives us a name like gke_<project>_<region or zone>_<cluster name>.
+
+#So let’s replace cluster names in ./kube/config
+
+sudo nano ~/.kube/config
+
+
+
+
+
 # Download and install Helm
 
 wget https://storage.googleapis.com/kubernetes-helm/helm-v2.14.0-linux-amd64.tar.gz
@@ -83,9 +93,7 @@ sudo ~/helm install --name prometheus --set server.persistentVolume.storageClass
 
    sudo kubectl create namespace spinnaker
 
-So, Its time to deploy kubeconfig as Secret? Wait a minute. Somehow Spinnaker doesn’t accept underscores for cluster names to be used his inside, but gcloud container clusters get-credentials <cluster name> gives us a name like gke_<project>_<region or zone>_<cluster name>.
 
-So let’s replace cluster names in ./kube/config
 
    sudo kubectl create secret generic kubeconfig --from-file=$HOME/.kube/config -n spinnaker
 
