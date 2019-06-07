@@ -2,7 +2,7 @@
 #based on https://cloud.google.com/solutions/continuous-delivery-spinnaker-kubernetes-engine
 
 #Enable required APIs for your project
-
+gcloud auth login
 gcloud auth application-default login
 gcloud config set project PROJECT_ID
 
@@ -29,8 +29,6 @@ gcloud iam service-accounts keys create spinnaker-sa.json --iam-account $SA_EMAI
 export SA_JSON=$(cat spinnaker-sa.json)
 
 
-
-
 #Create GKE cluster
 gcloud config set compute/zone us-central1-f
 
@@ -43,13 +41,16 @@ sudo gcloud container clusters get-credentials spinnaker-tutorial --zone us-cent
 
 # Download and install Helm
 
-wget https://storage.googleapis.com/kubernetes-helm/helm-v2.10.0-linux-amd64.tar.gz
+wget https://storage.googleapis.com/kubernetes-helm/helm-v2.14.0-linux-amd64.tar.gz
 
-tar zxfv helm-v2.10.0-linux-amd64.tar.gz
+tar zxfv helm-v2.14.0-linux-amd64.tar.gz
 
 cp linux-amd64/helm .
 
 chmod +x helm
+
+#update tiller version if required --  sudo ~/helm init --upgrade
+
 
 sudo kubectl create clusterrolebinding user-admin-binding --clusterrole=cluster-admin --user=$(gcloud config get-value account)
 sudo kubectl create serviceaccount tiller --namespace kube-system
@@ -69,7 +70,7 @@ sudo ./helm update
 
 
 #Then we'll want to install prometheus in order to collect metrics for our Canary efforts. GKE default storage class #is 'standard'
-helm install --name prometheus --set server.persistentVolume.storageClass=standard stable/prometheus
+sudo ~/helm install --name prometheus --set server.persistentVolume.storageClass=standard stable/prometheus
 
 #Connect to Prometheus
 #Get the Prometheus server URL by running these commands in the same shell:
@@ -78,7 +79,19 @@ helm install --name prometheus --set server.persistentVolume.storageClass=standa
 
   helm status prometheus
 
+
+  #create gcp static ip for Ingress service. We will <static-ip>.nip.io
+
+  gcloud compute addresses create spinnaker-static-ip --global
+
+
   #Create the file (spinnaker-config.yaml) describing the configuration for how Spinnaker should be installed
+
+  #change ingress ip in spinnaker-config.yaml
+
+ git clone https://github.com/tmarkunin/spinnaker.git
+
+  sudo ~/helm install -f spinnaker/spinnaker-config.yaml --name cd --timeout 1200 --namespace spinnaker stable/spinnaker
 
 
 
