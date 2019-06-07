@@ -11,20 +11,8 @@ dockerRegistries:
   password: '$SA_JSON'
   email: 1234@5678.com
 
-ingress:
-  enabled: true
-  host: spinnaker.34.96.116.245.nip.io
-  annotations:
-    kubernetes.io/ingress.class: addon-http-application-routing
-
-ingressGate:
-  enabled: true
-  host: gate.34.96.116.245.nip.io
-  annotations:
-    kubernetes.io/ingress.class: addon-http-application-routing
-
 halyard:
-  spinnakerVersion: 1.12.0
+  spinnakerVersion: 1.14.0
   image:
     repository: gcr.io/spinnaker-marketplace/halyard
     tag: 1.15.0
