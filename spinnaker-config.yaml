@@ -16,8 +16,8 @@ kubeConfig:
   secretName: kubeconfig
   secretKey: config
   contexts:
-  - gke_docker-242218_us-central1-f_spinnaker-tutorial
-  deploymentContext: spinnaker-tutorial 
+  - spinnaker-tutorial
+  deploymentContext: gke_docker-242218_us-central1-f_spinnaker-tutorial 
 
 halyard:
   spinnakerVersion: 1.14.0
