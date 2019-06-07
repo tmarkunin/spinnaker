@@ -11,6 +11,14 @@ dockerRegistries:
   password: '$SA_JSON'
   email: 1234@5678.com
 
+kubeConfig:
+  enabled: true
+  secretName: kubeconfig
+  secretKey: config
+  contexts:
+  - gke_docker-242218_us-central1-f_spinnaker-tutorial
+  deploymentContext: gke_docker-242218_us-central1-f_spinnaker-tutorial 
+
 halyard:
   spinnakerVersion: 1.14.0
   image:

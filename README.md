@@ -79,8 +79,11 @@ sudo ~/helm install --name prometheus --set server.persistentVolume.storageClass
 
   helm status prometheus
 
+  #We also need to create a secret for Spinnaker from our Kubeconfig file in order for Spinnaker to be able to talk to our cluster (for deploying applications)
+   sudo kubectl create secret generic kubeconfig --from-file=/home/vagrant/.kube/config -n spinnaker
 
-  #create gcp static ip for Ingress service. We will <static-ip>.nip.io
+
+  #create gcp static ip for Ingress service. We will <static-ip>.nip.io - Doesn't work
 
   gcloud compute addresses create spinnaker-static-ip --global
 
@@ -89,10 +92,10 @@ sudo ~/helm install --name prometheus --set server.persistentVolume.storageClass
 
   #Create the file (spinnaker-config.yaml) describing the configuration for how Spinnaker should be installed
 
-  #change ingress ip in spinnaker-config.yaml
-
  git clone https://github.com/tmarkunin/spinnaker.git
 
+
+#Finally, we can launch Helm to install spinnaker
   sudo ~/helm install -f spinnaker/spinnaker-config.yaml --name cd --timeout 1200 --namespace spinnaker stable/spinnaker
 
   #configure spinnaker
