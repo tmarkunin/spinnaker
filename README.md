@@ -82,6 +82,11 @@ sudo ~/helm install --name prometheus --set server.persistentVolume.storageClass
   #We also need to create a secret for Spinnaker from our Kubeconfig file in order for Spinnaker to be able to talk to our cluster (for deploying applications)
 
    sudo kubectl create namespace spinnaker
+
+So, Its time to deploy kubeconfig as Secret? Wait a minute. Somehow Spinnaker doesn’t accept underscores for cluster names to be used his inside, but gcloud container clusters get-credentials <cluster name> gives us a name like gke_<project>_<region or zone>_<cluster name>.
+
+So let’s replace cluster names in ./kube/config
+
    sudo kubectl create secret generic kubeconfig --from-file=$HOME/.kube/config -n spinnaker
 
 
