@@ -5,20 +5,6 @@ dockerRegistries:
     - rstarmer/hostname
     - rstarmer/curl
     - tmarkunin/testapi
-- name: gcr
-  address: https://gcr.io
-  username: _json_key
-  password: '$SA_JSON'
-  email: 1234@5678.com
-
-kubeConfig:
-  enabled: true
-  secretName: kubeconfig
-  secretKey: config
-  contexts:
-  - spinnaker-tutorial
-  - dev
-  deploymentContext: spinnaker-tutorial 
 
 halyard:
   spinnakerVersion: 1.12.0
