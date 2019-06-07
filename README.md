@@ -114,6 +114,10 @@ sudo ~/helm install --name prometheus --set server.persistentVolume.storageClass
 #Finally, we can launch Helm to install spinnaker
   sudo ~/helm install -f spinnaker/spinnaker-config.yaml --name cd --timeout 600 --namespace spinnaker stable/spinnaker
 
+  export DECK_POD=$(kubectl get pods --namespace spinnaker -l "cluster=spin-deck" \
+    -o jsonpath="{.items[0].metadata.name}")
+kubectl port-forward --namespace spinnaker $DECK_POD 8080:9000 >> /dev/null &
+
   #configure spinnaker
   
 

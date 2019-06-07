@@ -17,7 +17,6 @@ kubeConfig:
   secretKey: config
   contexts:
   - spinnaker-tutorial
-  - dev
   deploymentContext: spinnaker-tutorial 
 
 halyard:
