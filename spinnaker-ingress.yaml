@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: spinnaker-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: "34.96.116.245"
+  namespace: spinnaker
+spec:
+  rules:
+  - host: spinnaker-api.34.96.116.245.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: spin-gate
+          servicePort: 8084
+  - host: spinnaker.34.96.116.245.nip.io
+    http:
+      paths:
+      - backend:
+          serviceName: spin-deck
+          servicePort: 9000

@@ -84,6 +84,8 @@ sudo ~/helm install --name prometheus --set server.persistentVolume.storageClass
 
   gcloud compute addresses create spinnaker-static-ip --global
 
+  export DOMAIN=<static-ip>
+
 
   #Create the file (spinnaker-config.yaml) describing the configuration for how Spinnaker should be installed
 
@@ -92,6 +94,25 @@ sudo ~/helm install --name prometheus --set server.persistentVolume.storageClass
  git clone https://github.com/tmarkunin/spinnaker.git
 
   sudo ~/helm install -f spinnaker/spinnaker-config.yaml --name cd --timeout 1200 --namespace spinnaker stable/spinnaker
+
+  #configure spinnaker
+  #Edit spinnaker services https://itnext.io/deploying-spinnaker-on-gke-125ef47a8c9
+ 
+ #open spinnaker ports
+ gcloud compute firewall-rules create spinnaker-ui --allow tcp:9000 --source-ranges=0.0.0.0/0
+ gcloud compute firewall-rules create spinnaker-api --allow tcp:8084 --source-ranges=0.0.0.0/0
+
+ sudo kubectl exec --namespace spinnaker -it cd-spinnaker-halyard-0 bash
+
+ #add spinnaker ingress
+
+ sudo kubectl apply -f spinnaker/spinnaker-ingress.yaml
+
+
+
+  #delete spinnaker 
+  sudo ~/helm del --purge cd
+
 
 
 
